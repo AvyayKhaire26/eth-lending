@@ -1,0 +1,95 @@
+.collateral-statistics {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #1a1a1a;
+    border-radius: 8px;
+  }
+  
+  .collateral-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .collateral-content {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .collateral-card {
+    background-color: #242424;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    border-left: 4px solid #ffd700;
+  }
+  
+  .collateral-card h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #ffffff;
+  }
+  
+  .collateral-value {
+    font-size: 36px;
+    font-weight: bold;
+    color: #ffd700;
+    margin-bottom: 10px;
+  }
+  
+  .collateral-subtitle {
+    color: #aaa;
+    font-size: 14px;
+  }
+  
+  .loading, .error-message {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .error-message {
+    color: #f44336;
+    background-color: rgba(255, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+  
+  .refresh-button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.2s;
+  }
+  
+  .refresh-button:hover {
+    background-color: #444;
+  }
+  
+  .retry-button {
+    margin-top: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    transition: background-color 0.2s;
+  }
+  
+  .retry-button:hover {
+    background-color: #444;
+  }
+  

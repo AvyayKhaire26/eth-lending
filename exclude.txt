@@ -1,0 +1,10 @@
+node_modules/
+.hardhat/
+build/
+dist/
+artifacts/
+cache/
+.env*
+.vscode/
+.idea/
+.git/

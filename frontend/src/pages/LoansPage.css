@@ -1,0 +1,40 @@
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #333;
+  }
+  
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .nav-button {
+    display: inline-block;
+    background-color: #646cff;
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: background-color 0.2s;
+  }
+  
+  .nav-button:hover {
+    background-color: #535bf2;
+  }
+  
+  .intro-text {
+    color: #888;
+    margin-bottom: 25px;
+    max-width: 800px;
+  }
+  
+  .page-content {
+    padding: 0 20px;
+  }
+  

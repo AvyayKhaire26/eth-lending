@@ -1,0 +1,50 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.28;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "../interfaces/ILendingToken.sol";
+
+contract StandardLoanToken is ERC20, Ownable, ILendingToken {
+    // Token value in ETH (0.5 ETH)
+    uint256 private constant _TOKEN_VALUE = 500000000000000000;
+    
+    // Interest rate in basis points (8% annual = 800 basis points)
+    uint256 private constant _INTEREST_RATE = 800;
+    
+    constructor() ERC20("Standard Loan Token", "STDLT") Ownable(msg.sender) {}
+    
+    // Override functions to resolve conflicts
+    function name() public view virtual override(ERC20, ILendingToken) returns (string memory) {
+        return ERC20.name();
+    }
+    
+    function symbol() public view virtual override(ERC20, ILendingToken) returns (string memory) {
+        return ERC20.symbol();
+    }
+    
+    function decimals() public view virtual override(ERC20, ILendingToken) returns (uint8) {
+        return ERC20.decimals();
+    }
+    
+    function tokenValue() external pure override returns (uint256) {
+        return _TOKEN_VALUE;
+    }
+    
+    function interestRate() external pure override returns (uint256) {
+        return _INTEREST_RATE;
+    }
+    
+    function mint(address to, uint256 amount) external override onlyOwner {
+        _mint(to, amount);
+    }
+    
+    function burn(address from, uint256 amount) external override onlyOwner {
+        _burn(from, amount);
+    }
+    
+    function calculateInterest(uint256 principal, uint256 timeInSeconds) external pure override returns (uint256) {
+        uint256 interestPerSecond = (_INTEREST_RATE * principal) / (10000 * 31536000);
+        return interestPerSecond * timeInSeconds;
+    }
+}
