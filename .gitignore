@@ -28,3 +28,11 @@ node_modules/
 # Hardhat artifacts
 artifacts/
 cache/
+# ML Environment
+ml-env/
+__pycache__/
+*.pyc
+.jupyter/
+ml-services/test-data/generated/
+ml-services/models/trained/
+.env.ml

@@ -1,0 +1,37 @@
+{
+  "total_users": 1000,
+  "chronotype_distribution": {
+    "early": 250,
+    "intermediate": 500,
+    "late": 250
+  },
+  "feature_shapes": {
+    "basic_circadian": [
+      1000,
+      720
+    ],
+    "with_social_jetlag": [
+      1000,
+      720
+    ],
+    "with_stress": [
+      1000,
+      720
+    ],
+    "with_seasonal": [
+      1000,
+      720
+    ],
+    "with_jetlag": [
+      1000,
+      720
+    ],
+    "chronotype_labels": [
+      1000
+    ]
+  },
+  "data_files": [
+    "population_data_enhanced.json",
+    "ml_features_enhanced.npz"
+  ]
+}
