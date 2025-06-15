@@ -46,14 +46,20 @@ class MLPredictor:
         try:
             print("🧠 Loading ML models...")
             
-            # Load autoencoder
-            self.autoencoder = circadian_autoencoder.CircadianAutoencoder()
-            if self.autoencoder.load_model():
-                print("✅ Autoencoder loaded successfully")
-            else:
-                print("⚠️ Autoencoder not loaded")
+            # FIXED: Set working directory for autoencoder loading
+            original_cwd = os.getcwd()
+            os.chdir(project_root)  # Change to project root temporarily
             
-            # Load classifier
+            try:
+                self.autoencoder = circadian_autoencoder.CircadianAutoencoder()
+                if self.autoencoder.load_model():
+                    print("✅ Autoencoder loaded successfully")
+                else:
+                    print("⚠️ Autoencoder failed to load")
+            finally:
+                os.chdir(original_cwd)  # Restore original working directory
+            
+            # Classifier loading (unchanged)
             classifier_path = os.path.join(models_dir, "trained", "chronotype_classifier.keras")
             scaler_path = os.path.join(models_dir, "trained", "chronotype_scaler.pkl")
             
@@ -64,9 +70,7 @@ class MLPredictor:
                 print("✅ Classifier loaded successfully")
                 self.models_loaded = True
             else:
-                print(f"❌ Classifier files not found:")
-                print(f"   {classifier_path}")
-                print(f"   {scaler_path}")
+                print(f"❌ Classifier files not found")
                 
         except Exception as e:
             print(f"❌ Error loading models: {e}")
@@ -241,6 +245,74 @@ def calculate_circadian_rate():
             "hourly_multiplier": hourly_multiplier,
             "behavior_multiplier": behavior_multiplier,
             "current_hour": current_hour
+        })
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/user_insights', methods=['POST'])
+def user_insights():
+    """Get comprehensive user insights from activity pattern"""
+    try:
+        data = request.get_json()
+        
+        if 'activity_pattern' not in data:
+            return jsonify({"error": "Missing activity_pattern"}), 400
+        
+        activity_pattern = data['activity_pattern']
+        
+        if not isinstance(activity_pattern, list) or len(activity_pattern) == 0:
+            return jsonify({"error": "Invalid activity_pattern format"}), 400
+        
+        # Get chronotype prediction first
+        chronotype_result = predictor.predict_chronotype(activity_pattern)
+        
+        if not chronotype_result.get('success', False):
+            chronotype = 1  # Default to intermediate
+            chronotype_name = 'Intermediate'
+            confidence = 0.5
+        else:
+            chronotype = chronotype_result['chronotype']
+            chronotype_name = chronotype_result['chronotype_name']
+            confidence = chronotype_result['confidence']
+        
+        # Calculate activity pattern insights
+        pattern_24h = activity_pattern[:24] if len(activity_pattern) >= 24 else activity_pattern
+        
+        if len(pattern_24h) < 24:
+            # Pad with mean if less than 24 hours
+            mean_val = np.mean(pattern_24h) if len(pattern_24h) > 0 else 100
+            pattern_24h = np.pad(pattern_24h, (0, 24 - len(pattern_24h)), 'constant', constant_values=mean_val)
+        
+        # Find peak activity hour
+        peak_activity_hour = int(np.argmax(pattern_24h))
+        
+        # Calculate time period averages
+        morning_avg = float(np.mean(pattern_24h[6:12]))    # 6 AM - 12 PM
+        afternoon_avg = float(np.mean(pattern_24h[12:18]))  # 12 PM - 6 PM  
+        evening_avg = float(np.mean(pattern_24h[18:24]))    # 6 PM - 12 AM
+        night_avg = float(np.mean(pattern_24h[0:6]))        # 12 AM - 6 AM
+        
+        # Generate optimal borrowing hours based on chronotype
+        if chronotype == 0:  # Early
+            optimal_borrowing_hours = [6, 7, 8, 9, 10]
+        elif chronotype == 2:  # Late
+            optimal_borrowing_hours = [20, 21, 22, 23, 0]
+        else:  # Intermediate
+            optimal_borrowing_hours = [9, 10, 11, 14, 15]
+        
+        return jsonify({
+            "chronotype": chronotype,
+            "chronotype_name": chronotype_name,
+            "confidence": confidence,
+            "peak_activity_hour": peak_activity_hour,
+            "optimal_borrowing_hours": optimal_borrowing_hours,
+            "activity_summary": {
+                "morning_avg": morning_avg,
+                "afternoon_avg": afternoon_avg,
+                "evening_avg": evening_avg,
+                "night_avg": night_avg
+            }
         })
         
     except Exception as e:

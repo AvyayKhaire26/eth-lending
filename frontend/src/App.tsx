@@ -11,6 +11,9 @@ import TokenBalances from './components/TokenBalances'
 import TokenStatistics from './components/TokenStatistics'
 import TransactionHistory from './components/TransactionHistory'
 import CollateralStatistics from './components/CollateralStatistics'
+import CircadianMLDashboard from './components/CircadianMLDashboard'
+import DynamicCollateralCalculator from './components/DynamicCollateralCalculator'
+import ChronotypeAnalytics from './components/ChronotypeAnalytics'
 
 // Borrowing View Component
 const BorrowView = () => {
@@ -97,6 +100,24 @@ const NavTabs = () => {
       >
         Dashboard
       </Link>
+      <Link 
+        to="/circadian-dashboard" 
+        className={`tab ${location.pathname === '/circadian-dashboard' ? 'active' : ''}`}
+      >
+        🧬 ML Dashboard
+      </Link>
+      <Link 
+        to="/collateral-calculator" 
+        className={`tab ${location.pathname === '/collateral-calculator' ? 'active' : ''}`}
+      >
+        🎯 Calculator
+      </Link>
+      <Link 
+        to="/chronotype-analytics" 
+        className={`tab ${location.pathname === '/chronotype-analytics' ? 'active' : ''}`}
+      >
+        📊 Analytics
+      </Link>
     </div>
   );
 }
@@ -129,6 +150,9 @@ function App() {
           <Route path="/" element={<BorrowView />} />
           <Route path="/loans" element={<LoansView />} />
           <Route path="/dashboard" element={<DashboardView />} />
+          <Route path="/circadian-dashboard" element={<CircadianMLDashboard />} />
+          <Route path="/collateral-calculator" element={<DynamicCollateralCalculator />} />
+          <Route path="/chronotype-analytics" element={<ChronotypeAnalytics />} />
         </Routes>
       </div>
       
